@@ -170,11 +170,14 @@ void Graph::bfs() {
     reachedNodes.push_back(startIndex);
     distance.push_back(-1);
     bfsTree.push_back(startIndex);
-    int actual = 0;
+    size_t actual = 0;
     size_t previous_size = 0;
-    while(!((reachedNodes.size() == previous_size) && (actual == reachedNodes[reachedNodes.size() - 1]))) {
+    // int loop = 0;
+    // Loop has to stop, when we are at the last element of the reached nodes vector, and all of its neighbour''s has already been added
+    while(!((reachedNodes.size() == previous_size) && (actual == reachedNodes.size() - 1))) {
         previous_size = reachedNodes.size();
         int ind = reachedNodes[actual];
+        //std::cout << "Loop no. " << loop++ << " the actual node is: " << ind << " which has "<< adjacencyList[ind].size() << " neighbours"<< std::endl;
         for(std::vector<int>::iterator it = adjacencyList[ind].begin(); it != adjacencyList[ind].end(); ++it) {
             if(reached.find(*it) == reached.end()) {
                 reached.insert(*it);
@@ -183,16 +186,16 @@ void Graph::bfs() {
                 bfsTree.push_back(ind);
             }
         }
+
         actual++;
     }
 
     // Count the final result
-    for(std::vector<int>::iterator it = checkNodes.begin(); it != checkNodes.end(); it++) {
-        int indexOfCheckNode = *it;
-        for(size_t i = 0; i < reachedNodes.size(); ++i) {
-            if(reachedNodes[i] == indexOfCheckNode) {
-                sumDistance += distance[i];
-                //std::cout << "Distance of " << vexes[indexOfCheckNode] << " is " << distance[i] << std::endl;
+    for(size_t i = 0; i < checkNodes.size(); i++) {
+        int indexOfCheckNode = checkNodes[i];
+        for(size_t j = 0; j < reachedNodes.size(); ++j) {
+            if(reachedNodes[j] == indexOfCheckNode) {
+                sumDistance += distance[j];
                 break;
             }
         }
